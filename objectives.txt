@@ -1,6 +1,7 @@
 Phishing
 - dvp méthode pour check si le nom de domaine est mal orthographié. Voir comment utiliser https://dnstwister.report/ et https://github.com/elceef/dnstwist. Peut-être utiliser juste une fonction qui compare le nom avec une base de données de noms de gros sites
 - dvp méthode pour check automatiquement les certificats. Voir http://www.certificate-transparency.org et l'API https://certstream.calidog.io
+Possible faire machine learning, pour générer données d'entraînement prendre un truc au hasard, demander à google safe browsing et il va nous dire s'il est bon ou pas
 
 Voir https://pure.tugraz.at/ws/portalfiles/portal/25394076/156259641564590.pdf en général qui parle de tout ce qu'on fait
 
