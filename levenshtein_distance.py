@@ -24,7 +24,10 @@ def levenshtein_distance(w1, w2):
     return int(d[l1, l2])
 
 def main(argv):
-    print(levenshtein_distance(argv[1], argv[2]))
+    if len(argv) != 3:
+        print("usage : ./levenshtein_distance.py word1 word2")
+    else:
+        print(levenshtein_distance(argv[1], argv[2]))
 
 if __name__ == "__main__":
     main(sys.argv)
