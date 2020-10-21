@@ -1,3 +1,5 @@
+import numpy as np
+
 class Analyser():
 
     def split_name(self, url):
@@ -29,6 +31,32 @@ class Analyser():
         self.suspicious_keywords_list = ['activity', 'office', 'appleid', 'outlook', 'poloniex', 'facebook', 'moneygram', 'overstock', 'skype', 'alert', 'online', 'icloud', 'office365', 'coinhive', 'tumblr', 'westernunion', 'alibaba', 'github', 'purchase', 'recover', 'iforgot', 'microsoft', 'bithumb', 'reddit', 'bankofamerica', 'aliexpress', 'authentication', 'safe', 'itunes', 'windows', 'kraken', 'youtube', 'wellsfargo', 'leboncoin', 'authorize', 'secure', 'apple', 'protonmail localbitcoin', 'twitter', 'paypal', 'amazon', 'netflix', 'bill', 'security', 'tutanota', 'bitstamp', 'linkedin', 'citigroup', 'client', 'service', 'hotmail', 'bittrex', 'instagram', 'santander support', 'transaction', 'gmail', 'blockchain', 'flickr', 'morganstanley', 'unlock', 'update', 'google', 'bitflyer', 'whatsapp', 'barclays', 'wallet', 'account', 'outlook', 'coinbase', 'hsbc', 'form', 'login', 'yahoo', 'hitbtc', 'scottrade', 'log-in', 'password', 'google', 'lakebtc', 'ameritrade', 'live', 'signin', 'yandex', 'bitfinex', 'merilledge', 'manage', 'sign-in', 'bitconnect', 'bank', 'verification', ' verify', 'coinsbank', 'webscr', 'invoice', 'authenticate', ' confirm', 'credential', 'customer']
 
         self.free_certificates_authorities = ["hubspot", "let's encrypt", "comodo", "cloudflare", "ssl for free", "godaddy", "geoTrust", "gogetssl", "instantssl", "basicssl", "zerossel", "certbot", "wosign", "free ssl space", "cacert", "startssl", "free ssl", "gandi", "sectigo", "digicert"]
+
+    def levenshtein_distance(self, word):
+        l1, l2 = len(self.name), len(word)
+        d = np.zeros((l1 + 1, l2 + 1))
+        subCost = 0
+
+        for i in range(l1 + 1):
+            d[i, 0] = i
+        for j in range(l2 + 1):
+            d[0, j] = j
+
+        for i in range(1, l1 + 1):
+            for j in range(1, l2 + 1):
+                if self.name[i-1] == word[j-1]:
+                    subCost = 0
+                else:
+                    subCost = 1
+                d[i, j] = min(d[i-1, j] + 1, d[i, j-1] + 1, d[i-1, j-1] + subCost)
+        
+        return int(d[l1, l2])
+
+    def levenshtein(self):
+        ld = []
+        for word in self.suspicious_keywords_list:
+            ld.append(levenshtein_distance(self, word))
+        return min(ld)
 
     def issued_from_free_CA(self):
         """
