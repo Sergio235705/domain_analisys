@@ -15,9 +15,10 @@ class Analyser():
         name = '.'.join(url_splitted)
         return (name, extension)
 
-    def __init__(self, url):
+    def __init__(self, url, authority):
         self.url = url
         (self.name, self.extension) = self.split_name(self.url)
+        self.authority = authority.lower();
 
         # Taken from research paper
         self.suspiciousTLDs = ['.bank', '.online', '.business', '.party', '.cc', '.pw', '.center', '.racing', '.cf', '.ren', '.click', '.review', '.club', '.science', '.country', '.stream', '.download', '.study', '.ga', '.support', '.gb', '.tech', '.gdn', '.tk', '.gq', '.top', '.info', '.vip', '.kim', '.win', '.loan', '.work', '.men', '.win', '.ml', '.xyz', '.mom']
@@ -26,6 +27,21 @@ class Analyser():
         self.nonSuspiciousTLDs = ['.com', '.org', '.net', '.int', '.edu', '.gov', '.mil', '.cn', '.in', '.us', '.id', '.pk', '.br', '.ng', '.bd', '.ru', '.mx', '.jp', '.ph', '.cd', '.eg', '.et', '.vn', '.ir', '.tr', '.de', '.fr', '.uk', '.th', '.it', '.za', '.tz', '.mm', '.kr', '.co']
 
         self.suspicious_keywords_list = ['activity', 'office', 'appleid', 'outlook', 'poloniex', 'facebook', 'moneygram', 'overstock', 'skype', 'alert', 'online', 'icloud', 'office365', 'coinhive', 'tumblr', 'westernunion', 'alibaba', 'github', 'purchase', 'recover', 'iforgot', 'microsoft', 'bithumb', 'reddit', 'bankofamerica', 'aliexpress', 'authentication', 'safe', 'itunes', 'windows', 'kraken', 'youtube', 'wellsfargo', 'leboncoin', 'authorize', 'secure', 'apple', 'protonmail localbitcoin', 'twitter', 'paypal', 'amazon', 'netflix', 'bill', 'security', 'tutanota', 'bitstamp', 'linkedin', 'citigroup', 'client', 'service', 'hotmail', 'bittrex', 'instagram', 'santander support', 'transaction', 'gmail', 'blockchain', 'flickr', 'morganstanley', 'unlock', 'update', 'google', 'bitflyer', 'whatsapp', 'barclays', 'wallet', 'account', 'outlook', 'coinbase', 'hsbc', 'form', 'login', 'yahoo', 'hitbtc', 'scottrade', 'log-in', 'password', 'google', 'lakebtc', 'ameritrade', 'live', 'signin', 'yandex', 'bitfinex', 'merilledge', 'manage', 'sign-in', 'bitconnect', 'bank', 'verification', ' verify', 'coinsbank', 'webscr', 'invoice', 'authenticate', ' confirm', 'credential', 'customer']
+
+        self.free_certificates_authorities = ["hubspot", "let's encrypt", "comodo", "cloudflare", "ssl for free", "godaddy", "geoTrust", "gogetssl", "instantssl", "basicssl", "zerossel", "certbot", "wosign", "free ssl space", "cacert", "startssl", "free ssl", "gandi", "sectigo", "digicert"]
+
+    def issued_from_free_CA(self):
+        """
+        Indicates if the certificate authority is a free certificate authority
+
+        return: bool : true if certificate authority is free, false if not free
+        """
+        res = False
+        for ca in self.free_certificates_authorities:
+            if ca in self.authority:
+                res = True
+        return res
+
 
     def suspicious_tld(self):
         """
@@ -68,7 +84,6 @@ class Analyser():
                 else:
                     return True
         return False
-
 
 """
 1 Gaston
