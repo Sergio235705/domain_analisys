@@ -27,6 +27,14 @@ class Analyser():
 
         self.suspicious_keywords_list = ['activity', 'office', 'appleid', 'outlook', 'poloniex', 'facebook', 'moneygram', 'overstock', 'skype', 'alert', 'online', 'icloud', 'office365', 'coinhive', 'tumblr', 'westernunion', 'alibaba', 'github', 'purchase', 'recover', 'iforgot', 'microsoft', 'bithumb', 'reddit', 'bankofamerica', 'aliexpress', 'authentication', 'safe', 'itunes', 'windows', 'kraken', 'youtube', 'wellsfargo', 'leboncoin', 'authorize', 'secure', 'apple', 'protonmail localbitcoin', 'twitter', 'paypal', 'amazon', 'netflix', 'bill', 'security', 'tutanota', 'bitstamp', 'linkedin', 'citigroup', 'client', 'service', 'hotmail', 'bittrex', 'instagram', 'santander support', 'transaction', 'gmail', 'blockchain', 'flickr', 'morganstanley', 'unlock', 'update', 'google', 'bitflyer', 'whatsapp', 'barclays', 'wallet', 'account', 'outlook', 'coinbase', 'hsbc', 'form', 'login', 'yahoo', 'hitbtc', 'scottrade', 'log-in', 'password', 'google', 'lakebtc', 'ameritrade', 'live', 'signin', 'yandex', 'bitfinex', 'merilledge', 'manage', 'sign-in', 'bitconnect', 'bank', 'verification', ' verify', 'coinsbank', 'webscr', 'invoice', 'authenticate', ' confirm', 'credential', 'customer']
 
+    def deeply_nested_subdomains(self):
+        """
+        Give the number of '.' in the name which can be an indicator of suspiciousness if it is too high (F2 property)
+
+        returns : nb of '.' in the name
+        """
+        return self.name.count('.')
+
     def suspicious_tld(self):
         """
         Say if the domain name is suspicious, not suspicious or unknown (F4 property)
@@ -69,12 +77,19 @@ class Analyser():
                     return True
         return False
 
+    def hyphens_in_subdomain(self):
+        """
+        Give the number of "'" in the name which can be an indicator of suspiciousness if it is too high (F8 property)
+
+        returns : nb of "'" in the name
+        """
+        return self.name.count("'")
+
+
 
 """
 1 Gaston
-2 Easy
-3 à faire
-4-5-6 Done here
-7 y réfléchir
-8 easy
+3 Morgane
+2-4-5-6-8 Done here
+7 to discuss with the teatcher
 """
