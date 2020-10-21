@@ -42,6 +42,13 @@ class Analyser():
                 res = True
         return res
 
+    def deeply_nested_subdomains(self):
+        """
+        Give the number of '.' in the name which can be an indicator of suspiciousness if it is too high (F2 property)
+
+        returns : nb of '.' in the name
+        """
+        return self.name.count('.')
 
     def suspicious_tld(self):
         """
@@ -85,11 +92,17 @@ class Analyser():
                     return True
         return False
 
+    def hyphens_in_subdomain(self):
+        """
+        Give the number of "'" in the name which can be an indicator of suspiciousness if it is too high (F8 property)
+
+        returns : nb of "'" in the name
+        """
+        return self.name.count("'")
+
 """
 1 Gaston
-2 Easy
-3 à faire
-4-5-6 Done here
-7 y réfléchir
-8 easy
+3 Morgane
+2-4-5-6-8 Done here
+7 to discuss with the teatcher
 """
