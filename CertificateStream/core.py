@@ -46,11 +46,12 @@ class CertStreamClient(WebSocketApp):
         if self.on_error_handler:
             self.on_error_handler(ex)
         certstream_logger.error("Error connecting to CertStream - {} - Sleeping for a few seconds and trying again...".format(ex))
-
+# ONLY ONE CHANGE IN THE PARAMETERS : ADDED " Minutes " 
 def listen_for_events(message_callback,Minutes, url, skip_heartbeats=True, setup_logger=True, on_open=None, on_error=None, **kwargs):
     try:
         while True:
             c = CertStreamClient(message_callback, url, skip_heartbeats=skip_heartbeats, on_open=on_open, on_error=on_error)
+            # ADDED Minutes  ( go to implementations in _app.py)
             c.run_forever(Minutes, ping_interval=15, **kwargs)
             time.sleep(5)
     except KeyboardInterrupt:
