@@ -6,3 +6,9 @@
 #CaliMain.py "Nom du fichier où les certificats seront # écrits" "nombre de minutes d'analyse"
 
 # Json Certificate  {"id":"3","domain":"amazon.com"}
+#
+#
+# Je recommande de télécharger CaliMain, en important les packages requis, après avoir changé l'implémentation de core.# py (Allez aux implémentations de certstream.listen_for_events (..)) et _app.py (Allez aux implémentations de #  run_forever (..)) comme vous voyez dans les fichiers affichés
+#
+#
+#
