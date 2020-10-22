@@ -174,6 +174,8 @@ class WebSocketApp(object):
                     _logging.warning("send_ping routine terminated: {}".format(ex))
                     break
     #global events
+
+    # ONLY ONE CHANGE : ADDED Minutes  , Implementations of CHECK()
     def run_forever(self, Minutes, sockopt=None, sslopt=None,
                     ping_interval=0, ping_timeout=None,
                     http_proxy_host=None, http_proxy_port=None,
@@ -297,8 +299,8 @@ class WebSocketApp(object):
                     self._callback(self.on_message, data)
 
                 return True
-
-            def check():
+               # CHANGE : RAISING THE EXCEPTION TO STOP THE STREAM 
+            def check(): 
                # NowTime = int(datetime.datetime.now().strftime("%M"))
                 NowTime= datetime.datetime.now()
                 delta=NowTime-chosenTime
