@@ -6,7 +6,7 @@ if __name__ == "__main__":
     import sys
     print(sys.argv)
 
-
+## Example   CaliMain.py  C:\Users\Sergio\Desktop\b.txt  1  
 x = 0
 name,nomeFile, minutes = sys.argv
 file = open(nomeFile,"w")
@@ -46,7 +46,7 @@ def print_callback(message, context):
 
 
 logging.basicConfig(format='[%(levelname)s:%(name)s] %(asctime)s - %(message)s', level=logging.INFO)
-
+# implementation of this function is in core.py ( go to implementation )
 certstream.listen_for_events(print_callback,int(minutes), url='wss://certstream.calidog.io/')
 file.write(" ]")
 print("# certificates = " + str(x))
