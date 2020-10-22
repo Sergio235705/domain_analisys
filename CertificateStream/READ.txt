@@ -1,0 +1,8 @@
+#   CaliMain.py core.py _app.py
+
+# core.py _app.py Modifié pour arrêter le débit après  # x minutes
+
+#Exécutez CaliMain.py:
+#CaliMain.py "Nom du fichier où les certificats seront # écrits" "nombre de minutes d'analyse"
+
+# Json Certificate  {"id":"3","domain":"amazon.com"}
