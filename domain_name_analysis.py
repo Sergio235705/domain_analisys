@@ -20,7 +20,7 @@ class Analyser():
     def __init__(self, url, authority):
         self.url = url
         (self.name, self.extension) = self.split_name(self.url)
-        self.authority = authority.lower();
+        self.authority = authority.lower()
 
         # Taken from research paper
         self.suspiciousTLDs = ['.bank', '.online', '.business', '.party', '.cc', '.pw', '.center', '.racing', '.cf', '.ren', '.click', '.review', '.club', '.science', '.country', '.stream', '.download', '.study', '.ga', '.support', '.gb', '.tech', '.gdn', '.tk', '.gq', '.top', '.info', '.vip', '.kim', '.win', '.loan', '.work', '.men', '.win', '.ml', '.xyz', '.mom']
