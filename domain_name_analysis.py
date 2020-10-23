@@ -55,7 +55,7 @@ class Analyser():
     def levenshtein(self):
         ld = []
         for word in self.suspicious_keywords_list:
-            ld.append(levenshtein_distance(self, word))
+            ld.append(self.levenshtein_distance(self, word))
         return min(ld)
 
     def issued_from_free_CA(self):
