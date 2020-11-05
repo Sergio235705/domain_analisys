@@ -54,6 +54,7 @@ def get_num_last_cert(file_path):
     keys = list(dict.keys())
     last_cert = keys[-1]
     num_last_cert = (int)(last_cert[4:])
+    file.close()
 
     return num_last_cert
 
@@ -66,6 +67,13 @@ def main():
         return -1
 
     global file_a, current_cert
+
+    # creating the file if it doesn't exist
+    try:
+        f = open(sys.argv[1], "x")
+        f.close()
+    except:
+        pass
 
     # open the file and get id of the last cert registered
     current_cert = get_num_last_cert(sys.argv[1]) + 1
