@@ -12,3 +12,11 @@ On peut utiliser API google safe browsing au début mais y a moyen de faire mieu
 
 peu importe le nom qu'on nous donne on doit pouvoir l'analyser
 Sur https://certstream.calidog.io plein de noms de domaines arrivent à la suite. Le but final serait d'arriver à dire en direct sur chaque nom son score (trust ou pas)
+
+
+
+
+Réunion 1 :
+- Avoir les CT en temps réel grâce à l'API calidog -> Sergio
+- Savoir si un site est frauduleux grâce à la Safe Browsing Lookup API -> Witold
+- Commencer à regarder comment on peut traiter les données -> Morgane/Gaston
