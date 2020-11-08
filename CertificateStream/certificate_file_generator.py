@@ -9,18 +9,19 @@ def handle_callback(message, context):
     """
     function called to handle the information given by certstream
     """
-    global file_a, current_cert
+    global json_file, current_cert
 
     #add cert to the file
     to_write = ''
-    if file_a.tell() > 10:
-        os.system("truncate -s -1 " + sys.argv[1]) # remove the }
+    if json_file.tell() > 10:
         to_write += ', \n' # not to add the , on the first cert
-    to_write += '"cert' + str(current_cert) + '": ' + into_json(message) + '}'
-    file_a.write(to_write)
+    to_write += '"cert' + str(current_cert) + '": ' + into_json(message)
+    json_file.write(to_write)
 
+    # display the progress in the console
     if current_cert%100 == 0:
         print (current_cert, " certificates")
+
     current_cert += 1
 
 def json_print(str):
@@ -66,27 +67,27 @@ def main():
         print("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n")
         return -1
 
-    global file_a, current_cert
+    global json_file, current_cert
 
-    # creating the file if it doesn't exist
+    # delete the file if it exists
     try:
-        f = open(sys.argv[1], "x")
+        f = open(sys.argv[1], "x") # raise an error if the file exists
         f.close()
     except:
-        pass
+        os.remove(sys.argv[1])
+        f = open(sys.argv[1], "x")
+        f.close()
 
-    # open the file and get id of the last cert registered
-    current_cert = get_num_last_cert(sys.argv[1]) + 1
-    file_a = open(sys.argv[1], "a")
-
-    # initialize the file if it's empty
-    if file_a.tell() == 0:
-        file_a.write('{')
-        # print('youhou cest moi')
+    # open and intialize the file
+    current_cert = 0
+    json_file = open(sys.argv[1], "w")
+    json_file.write('{')
 
     logging.basicConfig(format='[%(levelname)s:%(name)s] %(asctime)s - %(message)s', level=logging.INFO)
     certstream.listen_for_events(handle_callback, url='wss://certstream.calidog.io/')
-    file_a.close()
+    json_file.write('}')
+    json_file.close()
+    print("There are " + str(current_cert) + " certificates in the file")
 
 if __name__ == "__main__":
     main()
