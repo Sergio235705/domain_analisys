@@ -9,6 +9,7 @@ class CertTreatment:
 
 
 """
+what a certificate looks like, you can use that to get the data you need to analyse
 {
     "data": {
         "cert_index": 193451967,
