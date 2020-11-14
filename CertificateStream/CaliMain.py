@@ -1,6 +1,6 @@
 import logging
 import datetime
-import certstreams
+import certstream
 
 if __name__ == "__main__":
     import sys
