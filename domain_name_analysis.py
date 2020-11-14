@@ -28,7 +28,9 @@ class Analyser():
         # Original domain + country with +50M ppl
         self.nonSuspiciousTLDs = ['.com', '.org', '.net', '.eu', '.int', '.edu', '.gov', '.mil', '.cn', '.in', '.us', '.id', '.pk', '.br', '.ng', '.bd', '.ru', '.mx', '.jp', '.ph', '.cd', '.eg', '.et', '.vn', '.ir', '.tr', '.de', '.fr', '.uk', '.th', '.it', '.za', '.il','.tz', '.mm', '.kr', '.co', '.tel', '.kw', '.jobs']
 
-        self.suspicious_keywords_list = ['activity', 'office', 'appleid', 'outlook', 'poloniex', 'facebook', 'moneygram', 'overstock', 'skype', 'alert', 'online', 'icloud', 'office365', 'coinhive', 'tumblr', 'westernunion', 'alibaba', 'github', 'purchase', 'recover', 'iforgot', 'microsoft', 'bithumb', 'reddit', 'bankofamerica', 'aliexpress', 'authentication', 'safe', 'itunes', 'windows', 'kraken', 'youtube', 'wellsfargo', 'leboncoin', 'authorize', 'secure', 'apple', 'protonmail localbitcoin', 'twitter', 'paypal', 'amazon', 'netflix', 'bill', 'security', 'tutanota', 'bitstamp', 'linkedin', 'citigroup', 'client', 'service', 'hotmail', 'bittrex', 'instagram', 'santander support', 'transaction', 'gmail', 'blockchain', 'flickr', 'morganstanley', 'unlock', 'update', 'google', 'bitflyer', 'whatsapp', 'barclays', 'wallet', 'account', 'outlook', 'coinbase', 'hsbc', 'form', 'login', 'yahoo', 'hitbtc', 'scottrade', 'log-in', 'password', 'google', 'lakebtc', 'ameritrade', 'live', 'signin', 'yandex', 'bitfinex', 'merilledge', 'manage', 'sign-in', 'bitconnect', 'bank', 'verification', ' verify', 'coinsbank', 'webscr', 'invoice', 'authenticate', ' confirm', 'credential', 'customer', 'invoice', 'post', 'document', 'postal', 'calculations', 'copy', 'fedex', 'statement', 'financial', 'dhl', 'usps',  'notification', 'n', 'irs', 'ups', 'no', 'delivery', 'ticket']
+        self.suspicious_keywords_list = ['activity', 'office', 'appleid', 'outlook', 'poloniex', 'facebook', 'moneygram', 'overstock', 'skype', 'alert', 'online', 'icloud', 'office365', 'coinhive', 'tumblr', 'westernunion', 'alibaba', 'github', 'purchase', 'recover', 'iforgot', 'microsoft', 'bithumb', 'reddit', 'bankofamerica', 'aliexpress', 'authentication', 'safe', 'itunes', 'windows', 'kraken', 'youtube', 'wellsfargo', 'leboncoin', 'authorize', 'secure', 'apple', 'protonmail localbitcoin', 'twitter', 'paypal', 'amazon', 'netflix', 'bill', 'security', 'tutanota', 'bitstamp', 'linkedin', 'citigroup', 'client', 'service', 'hotmail', 'bittrex', 'instagram', 'santander support', 'transaction', 'gmail', 'blockchain', 'flickr', 'morganstanley', 'unlock', 'update', 'google', 'bitflyer', 'whatsapp', 'barclays', 'wallet', 'account', 'outlook', 'coinbase', 'hsbc', 'form', 'login', 'yahoo', 'hitbtc', 'scottrade', 'log-in', 'password', 'google', 'lakebtc', 'ameritrade', 'live', 'signin', 'yandex', 'bitfinex', 'merilledge', 'manage', 'sign-in', 'bitconnect', 'bank', 'verification', ' verify', 'coinsbank', 'webscr', 'invoice', 'authenticate', ' confirm', 'credential', 'customer', 'invoice', 'post', 'document', 'postal', 'calculations', 'copy', 'fedex', 'statement', 'financial', 'dhl', 'usps',  'notification', 'n', 'irs', 'ups', 'no', 'delivery', 'ticket', 'https', 'http','auth','access', 'account', 'admin', 'agree', 'blue', 'business', 'cdn', 'choose', 'claim', 'cl', 'click', 'confirm','confirmation', 'connect', 'download', 'enroll', 'find', 'group', 'http', 'https', 'https-www', 'install', 'login', 'mobile', 'mail', 'my', 'online', 'pay', 'payment', 'payments', 'portal', 'recovery', 'register', 'ssl', 'safe', 'secure', 'security', 'service', 'services', 'signin', 'signup', 'support', 'summary', 'update', 'user', 'verify', 'verification', 'view', 'ww', 'www', 'web']
+
+        self.suspicious_characters_list = ['@','-']
 
         self.free_certificates_authorities = ["hubspot", "let's encrypt", "comodo", "cloudflare", "ssl for free", "godaddy", "geoTrust", "gogetssl", "instantssl", "basicssl", "zerossl", "certbot", "wosign", "free ssl space", "cacert", "startssl", "free ssl","free ssl certificate", "gandi", "sectigo", "digicert", "wosign’s kuaissl"]
 
@@ -128,6 +130,29 @@ class Analyser():
         """
         return self.name.count("'")
 
+    def suspicious_domain_length(self):
+        """
+        Analyse the length of the name which can be an indicator of suspiciousness if it is too high (F9 property)
+
+        returns true if length is >= 54 ( Statistical analysis ) 
+        """
+        if len(self.name) >= 54 : 
+            return true 
+        else : 
+            return false
+
+
+    def suspicious_characters(self):
+        """
+        Checks if there is suspicious characters in the name (F10 property)
+
+        returns: true if there is at least one
+        """
+
+        for ch in self.suspicious_characters_list:
+            if keyword in self.name:
+                    return True
+        return False 
 """
 1 Gaston
 3 Morgane
