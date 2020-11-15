@@ -17,6 +17,7 @@ class dnstwisterAPI:
         self.headers = {'Content-Type': 'application/json'}
         self.api_adr = "https://dnstwister.report/api/whois/"
         self.api_toex = "https://dnstwister.report/api/to_hex/"
+        self.api_parked = "https://dnstwister.report/api/parked/"
 
     def requestDataCreation(self, name):
 
@@ -64,7 +65,17 @@ class dnstwisterAPI:
         name = response[response.find("Registrant Organization:")+25:response.find("Registrant Organization:")+45]
         if name == "REDACTED FOR PRIVACY" : 
             return {} 
-        return name 
+        return name
+
+    def requestParkedCheckUrl(self, name):
+
+        response = requests.get(self.api_toex + name )
+        response_dec = json.loads(response.text)
+        response_dec = response_dec['domain_as_hexadecimal']
+        response = requests.get(url = self.api_parked + response_dec)
+        response = json.loads(response.text)
+        score = response['score']  # > 0.50 good parameter -> possibly no phishing 
+        return score
 """
 def main () :
     d = dnstwisterAPI()
