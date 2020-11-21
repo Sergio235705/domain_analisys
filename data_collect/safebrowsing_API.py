@@ -22,7 +22,7 @@ class SafebrowsingAPI:
                 ]
             }
         }
-        response = requests.post(api_adr, json = json_to_send, headers = self.headers)
+        response = requests.post(self.api_adr, json = json_to_send, headers = self.headers)
         return response.text
 
 
