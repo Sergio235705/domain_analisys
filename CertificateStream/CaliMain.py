@@ -1,18 +1,13 @@
+import json
 import logging
 import datetime
-import certstreams
+import certstream
+import sys
+from pysafebrowsing import SafeBrowsing
 
-if __name__ == "__main__":
-    import sys
-    print(sys.argv)
-
-## Example   CaliMain.py  C:\Users\Sergio\Desktop\b.txt  1  
-x = 0
-name,nomeFile, minutes = sys.argv
-file = open(nomeFile,"w")
-file.write("[ ")
+global x , file 
 def print_callback(message, context):
-    global x,file
+    global x, file
     logging.debug("Message -> {}".format(message))
 
     if message['message_type'] == "heartbeat":
@@ -38,18 +33,28 @@ def print_callback(message, context):
         if x != 1 :
             file.write(", ")
         file.write("{ \"id\": "+"\""+str(x)+"\""+" , \"domain\": "+"\""+domain+"\" }")
-
-        file.flush()
+        #print(domain)
+        
 
        # sys.stdout.flush()
 
+## Example   CaliMain.py  C:\Users\Sergio\Desktop\b.txt  1
+def main():
+    global x , file 
+    x = 0
+    name,nomeFile, minutes = sys.argv
+    file = open(nomeFile,"w")
+    file.write("[ ")
+    
+    logging.basicConfig(format='[%(levelname)s:%(name)s] %(asctime)s - %(message)s', level=logging.INFO)
+    # implementation of this function is in core.py ( go to implementation )
+    certstream.listen_for_events(print_callback,int(minutes), url='wss://certstream.calidog.io/')
+    file.write(" ]")
+    print("# certificates = " + str(x))
+    res = int(x) / float(minutes)
+    print("# certificates / minute = " + str(res))
+    file.close()
 
+if __name__ == "__main__":
 
-logging.basicConfig(format='[%(levelname)s:%(name)s] %(asctime)s - %(message)s', level=logging.INFO)
-# implementation of this function is in core.py ( go to implementation )
-certstream.listen_for_events(print_callback,int(minutes), url='wss://certstream.calidog.io/')
-file.write(" ]")
-print("# certificates = " + str(x))
-res = int(x) / float(minutes)
-print("# certificates / minute = " + str(res))
-file.close()
+    main()
