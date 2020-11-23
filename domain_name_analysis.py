@@ -1,6 +1,8 @@
 import numpy as np
 import dnstwisterAPI as dnstwisterAPI
+
 import datetime
+
 
 class Analyser():
 
@@ -25,18 +27,55 @@ class Analyser():
         self.authority = authority.lower()
 
         # Taken from research paper / web-site ( https://security-soup.net/good-domains-for-bad-guys-the-riskiest-tlds-for-malware-and-phishing/)
-        self.suspiciousTLDs = ['.bank', '.online', '.business', '.party', '.cc', '.pw', '.center', '.racing', '.cf', '.ren', '.click', '.review', '.club', '.science', '.country', '.stream', '.download', '.study', '.ga', '.support', '.gb', '.tech', '.gdn', '.tk', '.gq', '.top', '.info', '.vip', '.kim', '.loan', '.work', '.men', '.win', '.ml', '.xyz', '.mom', '.xin', '.jetzt' , '.bid', '.ren', '.trade', '.date', '.wang', 'accountants', '.cricket', '.link', '.rest', '.casa', '.tw','.buzz', '.faith' ,'.ref', '.biz', '.tokyo', '.ooo', '.yokohama', '.ryukyu', '.world', '.asia']
+        self.suspiciousTLDs = ['.bank', '.online', '.business', '.party', '.cc', '.pw', '.center', '.racing', '.cf',
+                               '.ren', '.click', '.review', '.club', '.science', '.country', '.stream', '.download',
+                               '.study', '.ga', '.support', '.gb', '.tech', '.gdn', '.tk', '.gq', '.top', '.info',
+                               '.vip', '.kim', '.loan', '.work', '.men', '.win', '.ml', '.xyz', '.mom', '.xin',
+                               '.jetzt', '.bid', '.ren', '.trade', '.date', '.wang', 'accountants', '.cricket', '.link',
+                               '.rest', '.casa', '.tw', '.buzz', '.faith', '.ref', '.biz', '.tokyo', '.ooo',
+                               '.yokohama', '.ryukyu', '.world', '.asia']
 
         # Original domain + country with +50M ppl
-        self.nonSuspiciousTLDs = ['.com', '.org', '.net', '.eu', '.int', '.edu', '.gov', '.mil', '.cn', '.in', '.us', '.id', '.pk', '.br', '.ng', '.bd', '.ru', '.mx', '.jp', '.ph', '.cd', '.eg', '.et', '.vn', '.ir', '.tr', '.de', '.fr', '.uk', '.th', '.it', '.za', '.il','.tz', '.mm', '.kr', '.co', '.tel', '.kw', '.jobs']
+        self.nonSuspiciousTLDs = ['.com', '.org', '.net', '.eu', '.int', '.edu', '.gov', '.mil', '.cn', '.in', '.us',
+                                  '.id', '.pk', '.br', '.ng', '.bd', '.ru', '.mx', '.jp', '.ph', '.cd', '.eg', '.et',
+                                  '.vn', '.ir', '.tr', '.de', '.fr', '.uk', '.th', '.it', '.za', '.il', '.tz', '.mm',
+                                  '.kr', '.co', '.tel', '.kw', '.jobs']
 
-        self.suspicious_keywords_list = ['activity', 'office', 'appleid', 'outlook', 'poloniex', 'facebook', 'moneygram', 'overstock', 'skype', 'alert', 'online', 'icloud', 'office365', 'coinhive', 'tumblr', 'westernunion', 'alibaba', 'github', 'purchase', 'recover', 'iforgot', 'microsoft', 'bithumb', 'reddit', 'bankofamerica', 'aliexpress', 'authentication', 'safe', 'itunes', 'windows', 'kraken', 'youtube', 'wellsfargo', 'leboncoin', 'authorize', 'secure', 'apple', 'protonmail localbitcoin', 'twitter', 'paypal', 'amazon', 'netflix', 'bill', 'security', 'tutanota', 'bitstamp', 'linkedin', 'citigroup', 'client', 'service', 'hotmail', 'bittrex', 'instagram', 'santander support', 'transaction', 'gmail', 'blockchain', 'flickr', 'morganstanley', 'unlock', 'update', 'google', 'bitflyer', 'whatsapp', 'barclays', 'wallet', 'account', 'outlook', 'coinbase', 'hsbc', 'form', 'login', 'yahoo', 'hitbtc', 'scottrade', 'log-in', 'password', 'google', 'lakebtc', 'ameritrade', 'live', 'signin', 'yandex', 'bitfinex', 'merilledge', 'manage', 'sign-in', 'bitconnect', 'bank', 'verification', ' verify', 'coinsbank', 'webscr', 'invoice', 'authenticate', ' confirm', 'credential', 'customer', 'invoice', 'post', 'document', 'postal', 'calculations', 'copy', 'fedex', 'statement', 'financial', 'dhl', 'usps',  'notification', 'n', 'irs', 'ups', 'no', 'delivery', 'ticket', 'https', 'http','auth','access', 'account', 'admin', 'agree', 'blue', 'business', 'cdn', 'choose', 'claim', 'cl', 'click', 'confirm','confirmation', 'connect', 'download', 'enroll', 'find', 'group', 'http', 'https', 'https-www', 'install', 'login', 'mobile', 'mail', 'my', 'online', 'pay', 'payment', 'payments', 'portal', 'recovery', 'register', 'ssl', 'safe', 'secure', 'security', 'service', 'services', 'signin', 'signup', 'support', 'summary', 'update', 'user', 'verify', 'verification', 'view', 'ww', 'www', 'web']
+        self.suspicious_keywords_list = ['activity', 'office', 'appleid', 'outlook', 'poloniex', 'facebook',
+                                         'moneygram', 'overstock', 'skype', 'alert', 'online', 'icloud', 'office365',
+                                         'coinhive', 'tumblr', 'westernunion', 'alibaba', 'github', 'purchase',
+                                         'recover', 'iforgot', 'microsoft', 'bithumb', 'reddit', 'bankofamerica',
+                                         'aliexpress', 'authentication', 'safe', 'itunes', 'windows', 'kraken',
+                                         'youtube', 'wellsfargo', 'leboncoin', 'authorize', 'secure', 'apple',
+                                         'protonmail localbitcoin', 'twitter', 'paypal', 'amazon', 'netflix', 'bill',
+                                         'security', 'tutanota', 'bitstamp', 'linkedin', 'citigroup', 'client',
+                                         'service', 'hotmail', 'bittrex', 'instagram', 'santander support',
+                                         'transaction', 'gmail', 'blockchain', 'flickr', 'morganstanley', 'unlock',
+                                         'update', 'google', 'bitflyer', 'whatsapp', 'barclays', 'wallet', 'account',
+                                         'outlook', 'coinbase', 'hsbc', 'form', 'login', 'yahoo', 'hitbtc', 'scottrade',
+                                         'log-in', 'password', 'google', 'lakebtc', 'ameritrade', 'live', 'signin',
+                                         'yandex', 'bitfinex', 'merilledge', 'manage', 'sign-in', 'bitconnect', 'bank',
+                                         'verification', ' verify', 'coinsbank', 'webscr', 'invoice', 'authenticate',
+                                         ' confirm', 'credential', 'customer', 'invoice', 'post', 'document', 'postal',
+                                         'calculations', 'copy', 'fedex', 'statement', 'financial', 'dhl', 'usps',
+                                         'notification', 'n', 'irs', 'ups', 'no', 'delivery', 'ticket', 'https', 'http',
+                                         'auth', 'access', 'account', 'admin', 'agree', 'blue', 'business', 'cdn',
+                                         'choose', 'claim', 'cl', 'click', 'confirm', 'confirmation', 'connect',
+                                         'download', 'enroll', 'find', 'group', 'http', 'https', 'https-www', 'install',
+                                         'login', 'mobile', 'mail', 'my', 'online', 'pay', 'payment', 'payments',
+                                         'portal', 'recovery', 'register', 'ssl', 'safe', 'secure', 'security',
+                                         'service', 'services', 'signin', 'signup', 'support', 'summary', 'update',
+                                         'user', 'verify', 'verification', 'view', 'ww', 'www', 'web']
 
-        self.suspicious_characters_list = ['@','-']
+        self.suspicious_characters_list = ['@', '-']
 
-        self.free_certificates_authorities = ["hubspot", "let's encrypt", "comodo", "cloudflare", "ssl for free", "godaddy", "geoTrust", "gogetssl", "instantssl", "basicssl", "zerossl", "certbot", "wosign", "free ssl space", "cacert", "startssl", "free ssl","free ssl certificate", "gandi", "sectigo", "digicert", "wosign’s kuaissl"]
-        self.suspicious_hosting = ["namecheap", "godaddy","namesilo"]
-
+        self.free_certificates_authorities = ["hubspot", "let's encrypt", "comodo", "cloudflare", "ssl for free",
+                                              "godaddy", "geoTrust", "gogetssl", "instantssl", "basicssl", "zerossl",
+                                              "certbot", "wosign", "free ssl space", "cacert", "startssl", "free ssl",
+                                              "free ssl certificate", "gandi", "sectigo", "digicert",
+                                              "wosign’s kuaissl"]
+        self.suspicious_hosting = ["namecheap", "godaddy", "namesilo"]
+    
     def levenshtein_distance(self, word):
         l1, l2 = len(self.name), len(word)
         d = np.zeros((l1 + 1, l2 + 1))
@@ -49,12 +88,12 @@ class Analyser():
 
         for i in range(1, l1 + 1):
             for j in range(1, l2 + 1):
-                if self.name[i-1] == word[j-1]:
+                if self.name[i - 1] == word[j - 1]:
                     subCost = 0
                 else:
                     subCost = 1
-                d[i, j] = min(d[i-1, j] + 1, d[i, j-1] + 1, d[i-1, j-1] + subCost)
-        
+                d[i, j] = min(d[i - 1, j] + 1, d[i, j - 1] + 1, d[i - 1, j - 1] + subCost)
+
         return int(d[l1, l2])
 
     def levenshtein(self):
@@ -62,7 +101,7 @@ class Analyser():
         for word in self.suspicious_keywords_list:
             ld.append(self.levenshtein_distance(word))
         return min(ld)
-
+    
     def issued_from_free_CA(self):
         """
         Indicates if the certificate authority is a free certificate authority
@@ -119,7 +158,7 @@ class Analyser():
         for keyword in self.suspicious_keywords_list:
             if keyword in self.name:
                 if keyword == self.name:
-                # google.com isn't suspicious because there is google in the name
+                    # google.com isn't suspicious because there is google in the name
                     return False
                 else:
                     return True
@@ -137,13 +176,12 @@ class Analyser():
         """
         Analyse the length of the name which can be an indicator of suspiciousness if it is too high (F9 property)
 
-        returns true if length is >= 54 ( Statistical analysis ) 
+        returns true if length is >= 54 ( Statistical analysis )
         """
-        if len(self.name) >= 54 : 
-            return true 
-        else : 
-            return false
-
+        if len(self.name) >= 54:
+            return True
+        else:
+            return False
 
     def suspicious_characters(self):
         """
@@ -153,59 +191,70 @@ class Analyser():
         """
 
         for ch in self.suspicious_characters_list:
-            if keyword in self.name:
-                    return True
-        return False 
-    
+            if ch in self.name:
+                return True
+        return False
+
     def suspicious_age_domain(self):
         """
-        Checks if the domain age is suspicious (F11 property) 
+        Checks if the domain age is suspicious (F11 property)
         dnstwister API
         Age Of Domain <= 6 months -> Phishing
         """
-        api = dnstwisterAPI() 
-        date = api.requestDateCreation(self.name)
-        if date == {} : 
+        today = datetime.date.today()
+        d1 = today.strftime("%Y-%m-%d")
+        #print("d1 =", d1)
+        api = dnstwisterAPI.dnstwisterAPI()
+        date = api.requestDateCreation(self.name+self.extension)
+        if date == {}:
+            return True
+        if api.numMonth(d1,date) > 6 :
+            return False
+        else :
             return True 
-        """
-        checking age 
-        """
-        return False
+
     def suspicious_date_creation(self):
         """
-        Checks if the domain age is suspicious (F11 property)
-        dnstwister API
+        date_creation in last month -> phishing 
+        dnstwister API date = api.requestDateCreation(self.name+self.extension)
         """
+
     def suspicious_date_expiry(self):
         """
-        Checks if the domain age is suspicious (F11 property)
+        Registry Expiry Date <= 1 year -> Phishing
         dnstwister API
         """
+
     def suspicious_valid_period_domain(self):
         """
-        Checks if the domain age is suspicious (F11 property)
+        Registry Expiry Date - Creation Date <= 1 year -> Phishing
         dnstwister API
         """
+
     def suspicious_registrant_name(self):
         """
-        Checks if the domain age is suspicious (F11 property)
+        if Api.requestRegistrantName(self.name+self.extension) return {} is suspicious 
         dnstwister API
         """
+
     def suspicious_registrant_organization(self):
         """
-        Checks if the domain age is suspicious (F11 property)
+        if Api.requestRegistrantOrganization(self.name+self.extension) return {} is suspicious 
         dnstwister API
         """
+
     def suspicious_registrarURL(self):
         """
-        Checks if the domain age is suspicious (F11 property)
+        if Api.requestRegistrantURL_Host(self.name+self.extension) return {} is suspicious 
         dnstwister API
         """
+
     def suspicious_parkerURL(self):
-         """
-        Checks if the domain age is suspicious (F11 property)
-        dnstwister API
         """
+       return requestParkedCheckUrl(self.name + self.extension) return score  ( > 0.50 good parameter -> possibly no phishing )
+       dnstwister API
+       """
+
 """
 1 Gaston
 3 Morgane
