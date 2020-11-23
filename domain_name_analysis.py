@@ -1,5 +1,6 @@
 import numpy as np
-
+import dnstwisterAPI as dnstwisterAPI
+import datetime
 
 class Analyser():
 
@@ -158,12 +159,53 @@ class Analyser():
     
     def suspicious_age_domain(self):
         """
-        Checks if the domain age is suspicious (F11 property)
-
+        Checks if the domain age is suspicious (F11 property) 
+        dnstwister API
+        Age Of Domain <= 6 months -> Phishing
         """
-        dnsAPI= dnstwisterAPI()
-        dnsAPI.
-
+        api = dnstwisterAPI() 
+        date = api.requestDateCreation(self.name)
+        if date == {} : 
+            return True 
+        """
+        checking age 
+        """
+        return False
+    def suspicious_date_creation(self):
+        """
+        Checks if the domain age is suspicious (F11 property)
+        dnstwister API
+        """
+    def suspicious_date_expiry(self):
+        """
+        Checks if the domain age is suspicious (F11 property)
+        dnstwister API
+        """
+    def suspicious_valid_period_domain(self):
+        """
+        Checks if the domain age is suspicious (F11 property)
+        dnstwister API
+        """
+    def suspicious_registrant_name(self):
+        """
+        Checks if the domain age is suspicious (F11 property)
+        dnstwister API
+        """
+    def suspicious_registrant_organization(self):
+        """
+        Checks if the domain age is suspicious (F11 property)
+        dnstwister API
+        """
+    def suspicious_registrarURL(self):
+        """
+        Checks if the domain age is suspicious (F11 property)
+        dnstwister API
+        """
+    def suspicious_parkerURL(self):
+         """
+        Checks if the domain age is suspicious (F11 property)
+        dnstwister API
+        """
 """
 1 Gaston
 3 Morgane
