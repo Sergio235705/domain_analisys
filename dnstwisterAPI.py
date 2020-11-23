@@ -19,7 +19,7 @@ class dnstwisterAPI:
         self.api_toex = "https://dnstwister.report/api/to_hex/"
         self.api_parked = "https://dnstwister.report/api/parked/"
 
-    def requestDataCreation(self, name):
+    def requestDateCreation(self, name):
 
         response = requests.get(self.api_toex + name )
         response_dec = json.loads(response.text)
