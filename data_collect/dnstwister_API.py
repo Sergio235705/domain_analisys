@@ -28,6 +28,8 @@ class dnstwisterAPI:
         response = json.loads(response.text)
         response = response['whois_text']
         data_creation = response[response.find("Creation Date")+15:response.find("Creation Date")+25]
+        if data_creation == "" :
+            return {}
         return data_creation
     
     def requestExpiryDate(self, name):
@@ -38,7 +40,10 @@ class dnstwisterAPI:
         response = requests.get(url = self.api_adr + response_dec)
         response = json.loads(response.text)
         response = response['whois_text']
+        data_expiry = ""
         data_expiry = response[response.find("Registry Expiry Date")+22:response.find("Registry Expiry Date")+32]
+        if data_expiry == "" :
+            return {}
         return data_expiry
 
     def requestRegistrantName(self, name):
@@ -48,9 +53,12 @@ class dnstwisterAPI:
         response_dec = response_dec['domain_as_hexadecimal']
         response = requests.get(url = self.api_adr + response_dec)
         response = json.loads(response.text)
+        name = "" 
         response = response['whois_text']
         name = response[response.find("Registrant Name:")+17:response.find("Registrant Name:")+37]
-        if name == "REDACTED FOR PRIVACY" : 
+        name = name.upper() 
+        if name == "REDACTED FOR PRIVACY" or name == "WHOISPROTECTION.CC" or name == ""
+         or "PRIVATE" in name or "WHOIS" in name or "PRIVACY" in name or "PROTECTED" in name or "PROTECTION" in name  : 
             return {} 
         return name 
 
@@ -61,9 +69,26 @@ class dnstwisterAPI:
         response_dec = response_dec['domain_as_hexadecimal']
         response = requests.get(url = self.api_adr + response_dec)
         response = json.loads(response.text)
+        name = "" 
         response = response['whois_text']
         name = response[response.find("Registrant Organization:")+25:response.find("Registrant Organization:")+45]
-        if name == "REDACTED FOR PRIVACY" : 
+        name = name.upper()
+        if name == "REDACTED FOR PRIVACY" or name == "WHOISPROTECTION.CC" or name == ""
+         or "PRIVATE" in name or "PRIVACY" in name or "WHOIS" in name or "DOMAIN" in name : 
+            return {} 
+        return name
+
+    def requestRegistrarURL_Host(self, name):
+
+        response = requests.get(self.api_toex + name )
+        response_dec = json.loads(response.text)
+        response_dec = response_dec['domain_as_hexadecimal']
+        response = requests.get(url = self.api_adr + response_dec)
+        response = json.loads(response.text)
+        name = "" 
+        response = response['whois_text']
+        name = response[response.find("Registrar URL:")+15:response.find("Registrar URL:")+50]
+        if name == "" :
             return {} 
         return name
 
