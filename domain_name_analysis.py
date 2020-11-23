@@ -33,6 +33,7 @@ class Analyser():
         self.suspicious_characters_list = ['@','-']
 
         self.free_certificates_authorities = ["hubspot", "let's encrypt", "comodo", "cloudflare", "ssl for free", "godaddy", "geoTrust", "gogetssl", "instantssl", "basicssl", "zerossl", "certbot", "wosign", "free ssl space", "cacert", "startssl", "free ssl","free ssl certificate", "gandi", "sectigo", "digicert", "wosign’s kuaissl"]
+        self.suspicious_hosting = ["namecheap", "godaddy","namesilo"]
 
     def levenshtein_distance(self, word):
         l1, l2 = len(self.name), len(word)
