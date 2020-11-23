@@ -57,8 +57,8 @@ class dnstwisterAPI:
         response = response['whois_text']
         name = response[response.find("Registrant Name:")+17:response.find("Registrant Name:")+37]
         name = name.upper() 
-        if name == "REDACTED FOR PRIVACY" or name == "WHOISPROTECTION.CC" or name == ""
-         or "PRIVATE" in name or "WHOIS" in name or "PRIVACY" in name or "PROTECTED" in name or "PROTECTION" in name  : 
+        if (name == "REDACTED FOR PRIVACY" or name == "WHOISPROTECTION.CC" or name == ""
+         or "PRIVATE" in name or "WHOIS" in name or "PRIVACY" in name or "PROTECTED" in name or "PROTECTION" in name)  : 
             return {} 
         return name 
 
@@ -73,8 +73,8 @@ class dnstwisterAPI:
         response = response['whois_text']
         name = response[response.find("Registrant Organization:")+25:response.find("Registrant Organization:")+45]
         name = name.upper()
-        if name == "REDACTED FOR PRIVACY" or name == "WHOISPROTECTION.CC" or name == ""
-         or "PRIVATE" in name or "PRIVACY" in name or "WHOIS" in name or "DOMAIN" in name : 
+        if (name == "REDACTED FOR PRIVACY" or name == "WHOISPROTECTION.CC" or name == ""
+         or "PRIVATE" in name or "PRIVACY" in name or "WHOIS" in name or "DOMAIN" in name ) : 
             return {} 
         return name
 
