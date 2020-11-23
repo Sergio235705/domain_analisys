@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Analyser():
 
     def split_name(self, url):
@@ -154,6 +155,15 @@ class Analyser():
             if keyword in self.name:
                     return True
         return False 
+    
+    def suspicious_age_domain(self):
+        """
+        Checks if the domain age is suspicious (F11 property)
+
+        """
+        dnsAPI= dnstwisterAPI()
+        dnsAPI.
+
 """
 1 Gaston
 3 Morgane
