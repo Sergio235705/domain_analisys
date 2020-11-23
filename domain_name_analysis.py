@@ -23,7 +23,7 @@ class Analyser():
         self.authority = authority.lower()
 
         # Taken from research paper / web-site ( https://security-soup.net/good-domains-for-bad-guys-the-riskiest-tlds-for-malware-and-phishing/)
-        self.suspiciousTLDs = ['.bank', '.online', '.business', '.party', '.cc', '.pw', '.center', '.racing', '.cf', '.ren', '.click', '.review', '.club', '.science', '.country', '.stream', '.download', '.study', '.ga', '.support', '.gb', '.tech', '.gdn', '.tk', '.gq', '.top', '.info', '.vip', '.kim', '.loan', '.work', '.men', '.win', '.ml', '.xyz', '.mom', '.xin', '.jetzt' , '.bid', '.ren', '.trade', '.date', '.wang', 'accountants', '.cricket', '.link', '.rest', '.casa', '.tw', '.faith' , '.biz', '.tokyo', '.ooo', '.yokohama', '.ryukyu', '.world', '.asia']
+        self.suspiciousTLDs = ['.bank', '.online', '.business', '.party', '.cc', '.pw', '.center', '.racing', '.cf', '.ren', '.click', '.review', '.club', '.science', '.country', '.stream', '.download', '.study', '.ga', '.support', '.gb', '.tech', '.gdn', '.tk', '.gq', '.top', '.info', '.vip', '.kim', '.loan', '.work', '.men', '.win', '.ml', '.xyz', '.mom', '.xin', '.jetzt' , '.bid', '.ren', '.trade', '.date', '.wang', 'accountants', '.cricket', '.link', '.rest', '.casa', '.tw', '.faith' ,'.ref', '.biz', '.tokyo', '.ooo', '.yokohama', '.ryukyu', '.world', '.asia']
 
         # Original domain + country with +50M ppl
         self.nonSuspiciousTLDs = ['.com', '.org', '.net', '.eu', '.int', '.edu', '.gov', '.mil', '.cn', '.in', '.us', '.id', '.pk', '.br', '.ng', '.bd', '.ru', '.mx', '.jp', '.ph', '.cd', '.eg', '.et', '.vn', '.ir', '.tr', '.de', '.fr', '.uk', '.th', '.it', '.za', '.il','.tz', '.mm', '.kr', '.co', '.tel', '.kw', '.jobs']
