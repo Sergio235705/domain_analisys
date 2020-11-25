@@ -210,53 +210,115 @@ class Analyser():
         api = dnstwisterAPI.dnstwisterAPI()
         date = api.requestDateCreation(self.name+self.extension)
         if date == {}:
-            return 1
+            return True
         if api.numMonth(d1,date) > 6 :
-            return 0
+            return False
         else :
-            return 1
+            return True 
 
     def suspicious_date_creation(self):
         """
         date_creation in last month -> phishing 
         dnstwister API date = api.requestDateCreation(self.name+self.extension)
         """
+        today = datetime.date.today()
+        d1 = today.strftime("%Y-%m-%d")
+        #print("d1 =", d1)
+        api = dnstwisterAPI.dnstwisterAPI()
+        date = api.requestDateCreation(self.name+self.extension)
+        if date == {}:
+            return True
+        if api.numMonth(d1,date) == 0 :
+            return True
+        else :
+            return False 
 
     def suspicious_date_expiry(self):
         """
         Registry Expiry Date <= 1 year -> Phishing
         dnstwister API
         """
+        today = datetime.date.today()
+        d1 = today.strftime("%Y-%m-%d")
+        #print("d1 =", d1)
+        api = dnstwisterAPI.dnstwisterAPI()
+        date = api.requestExpiryDate(self.name+self.extension)
+        if date == {}:
+            return True
+        if api.numMonth(d1,date) > 12 :
+            return False
+        else :
+            return True 
 
     def suspicious_valid_period_domain(self):
         """
         Registry Expiry Date - Creation Date <= 1 year -> Phishing
         dnstwister API
         """
+        
+        api = dnstwisterAPI.dnstwisterAPI()
+        dateEx = api.requestExpiryDate(self.name+self.extension)
+        dateCr = api.requestDateCreation(self.name+self.extension)
+        if dateEx == {} or dateCr == {}:
+            return True
+        if api.numMonth(dateEx,dateCr) > 12 :
+            return False
+        else :
+            return True 
 
     def suspicious_registrant_name(self):
         """
         if Api.requestRegistrantName(self.name+self.extension) return {} is suspicious 
         dnstwister API
         """
+        
+        api = dnstwisterAPI.dnstwisterAPI()
+        name = api.requestRegistrantName(self.name+self.extension)
+        if name == {}:
+            return True
+        return False
+        
 
     def suspicious_registrant_organization(self):
         """
         if Api.requestRegistrantOrganization(self.name+self.extension) return {} is suspicious 
         dnstwister API
         """
+        api = dnstwisterAPI.dnstwisterAPI()
+        name = api.requestRegistrantOrganization(self.name+self.extension)
+        if name == {}:
+            return True
+        return False
 
     def suspicious_registrarURL(self):
         """
         if Api.requestRegistrantURL_Host(self.name+self.extension) return {} is suspicious 
         dnstwister API
         """
+        api = dnstwisterAPI.dnstwisterAPI()
+        name = api.requestRegistrarURL_Host(self.name+self.extension)
+        if name == {}:
+            return True
+        for host in self.suspicious_hosting:
+            if host in self.name:
+                return True
+        return False
 
     def suspicious_parkerURL(self):
         """
        return requestParkedCheckUrl(self.name + self.extension) return score  ( > 0.50 good parameter -> possibly no phishing )
        dnstwister API
        """
+       
+        if (self.suspicious_age_domain() and   self.suspicious_date_creation() and self.suspicious_date_expiry() and self.suspicious_valid_period_domain()):
+          api = dnstwisterAPI.dnstwisterAPI()
+          value = api.requestRegistrarURL_Host(self.name+self.extension)
+          if value > 0.50 : 
+              return False
+          else: 
+              return True
+        else:
+          return False 
 
 """
 1 Gaston
