@@ -11,6 +11,7 @@ from cert_treatment import CertTreatment
 project_root = "/".join(os.path.abspath(__file__).split("/")[:-2])+"/"
 sys.path.append(project_root)
 from data_collect import safebrowsing_API
+from domain_name_analysis import Analyser
 
 class FileTreatment:
     def __init__(self, file_path):
@@ -49,7 +50,13 @@ class FileTreatment:
             f.close()
 
         sb = safebrowsing_API.SafebrowsingAPI()
+
         fields = ['domain_name', 'is_suspicious', 'threatType', 'platformType']
+        analyser = Analyser("", "")
+        # Add a column for each feature (named Featurei)
+        for i in range(analyser.number_features):
+            fields.append('Feature' + str(i + 1))
+
         rows = []
         count = 1
 
@@ -63,7 +70,9 @@ class FileTreatment:
             group_count += 1
 
             if group_count == 200 or count == self.nb_cert:
-                # every 100 certificates or if it's at the end of the file, we make a request to the safebrowsing_API and store its results in the list "rows" to put it at the end on the csv file
+                # every 100 certificates or if it's at the end of the file, we make a 
+                # request to the safebrowsing_API and store its results in the list "rows" 
+                # to put it at the end on the csv file
                 result = sb.multiple_requests(group_list)
                 result_dict = eval(result)
 
@@ -81,7 +90,8 @@ class FileTreatment:
                         # filling a new dict with the result to have it indexed by the url, so I can search through
                         group_matches[elt["threat"]["url"]] = (elt["threatType"], elt["platformType"])
                 for elt in group_list:
-                    suspicious = False
+                    row_features = self.get_features_values(elt) # Features
+                    suspicious = False # Is suspicious
                     threatType = ''
                     platformType = ''
                     if elt in group_matches:
@@ -89,14 +99,32 @@ class FileTreatment:
                         threatType = group_matches[elt][0]
                         platformType = group_matches[elt][1]
                     row = [elt, suspicious, threatType, platformType]
+                    for feature in row_features:
+                        row.append(feature)
                     rows.append(row)
-
 
                 group_count = 0
                 group_list = []
                 print (str(count) + " certificates analysed")
             count +=1
         self.write_in_csv(csv_file_path, fields, rows)
+    
+    def get_features_values(self, domain_name):
+        """
+            Compute value of the features for the domain name and return it in a row
+        """
+        # Create analyser for the domain name
+        analyser = Analyser(domain_name, "")
+        row = []
+        row.append(analyser.levenshtein())
+        row.append(analyser.deeply_nested_subdomains())
+        row.append(analyser.suspicious_tld())
+        row.append(analyser.inner_tld_in_subdomain())
+        row.append(analyser.suspicious_keywords())
+        row.append(analyser.hyphens_in_subdomain())
+        row.append(analyser.suspicious_domain_length())
+        row.append(analyser.suspicious_characters())
+        return row
 
     def see_horrible(self):
         """

@@ -20,11 +20,14 @@ class Analyser():
             del url_splitted[0]
         name = '.'.join(url_splitted)
         return (name, extension)
+    
 
     def __init__(self, url, authority):
         self.url = url
-        (self.name, self.extension) = self.split_name(self.url)
+        if len(url) != 0:
+            (self.name, self.extension) = self.split_name(self.url)
         self.authority = authority.lower()
+        self.number_features = 8 # Number of feature we can compute
 
         # Taken from research paper / web-site ( https://security-soup.net/good-domains-for-bad-guys-the-riskiest-tlds-for-malware-and-phishing/)
         self.suspiciousTLDs = ['.bank', '.online', '.business', '.party', '.cc', '.pw', '.center', '.racing', '.cf',
@@ -145,8 +148,8 @@ class Analyser():
 
         for extension in self.nonSuspiciousTLDs:
             if extension in self.name:
-                return True
-        return False
+                return 1
+        return 0
 
     def suspicious_keywords(self):
         """
@@ -159,10 +162,10 @@ class Analyser():
             if keyword in self.name:
                 if keyword == self.name:
                     # google.com isn't suspicious because there is google in the name
-                    return False
+                    return 0
                 else:
-                    return True
-        return False
+                    return 1
+        return 0
 
     def hyphens_in_subdomain(self):
         """
@@ -179,9 +182,9 @@ class Analyser():
         returns true if length is >= 54 ( Statistical analysis )
         """
         if len(self.name) >= 54:
-            return True
+            return 1
         else:
-            return False
+            return 0
 
     def suspicious_characters(self):
         """
@@ -192,8 +195,8 @@ class Analyser():
 
         for ch in self.suspicious_characters_list:
             if ch in self.name:
-                return True
-        return False
+                return 1
+        return 0
 
     def suspicious_age_domain(self):
         """
@@ -207,11 +210,11 @@ class Analyser():
         api = dnstwisterAPI.dnstwisterAPI()
         date = api.requestDateCreation(self.name+self.extension)
         if date == {}:
-            return True
+            return 1
         if api.numMonth(d1,date) > 6 :
-            return False
+            return 0
         else :
-            return True 
+            return 1
 
     def suspicious_date_creation(self):
         """
