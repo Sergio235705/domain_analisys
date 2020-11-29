@@ -2,6 +2,8 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 import numpy as np
 import csv
+import logging
+import certstream
 
 def model_creation(neurons, nb_features, nb_targets):
     # Session
@@ -49,7 +51,7 @@ def model_creation(neurons, nb_features, nb_targets):
     layers_dict["output_layer"] = tf.abs(tf.transpose(tf.add(
         tf.matmul(layers_dict["hidden_layer_"+str(len(neurons)-1)],layers_dict["weight_out"]),
         layers_dict["bias_out"]
-        )))
+        )), name = "output_layer")
 
     #Cost_function
     mse = tf.sqrt(tf.reduce_mean(tf.squared_difference(layers_dict["output_layer"], Y)))
@@ -116,6 +118,18 @@ def create_labels_targets(reader, nb_features, nb_targets):
 
     return labels, targets
 
+def handle_callback(message, context):
+    global session, layers_dict, X
+    print(message['data']['leaf_cert']['all_domains'][0])
+
+    prediction = session.run(layers_dict["output_layer"], feed_dict={X:[[0.7242, 0.2116, 0.4853]]})
+    print(prediction)
+
+def stream_handling():
+    logging.basicConfig(format='[%(levelname)s:%(name)s] %(asctime)s - %(message)s', level=logging.INFO)
+    certstream.listen_for_events(handle_callback, url='wss://certstream.calidog.io/')
+
+
 
 def main():
     # Data processing
@@ -136,28 +150,31 @@ def main():
     test_labels, test_targets = create_labels_targets(test_dictReader, nb_features, nb_targets)
 
     # Model creation
+    global session, layers_dict, X
     X, Y, session, optimizer, error_fn, layers_dict = model_creation(hidden_neurons, nb_features, nb_targets)
 
-    # print("\n\nFIINI\n\n")
+    # Saver to store the model
 
     # Model training
+    total_epochs = 0
     next = 1
     while next==1 :
         epochs = int(input("Combien d'epochs ? "))
-        model_training(
-                X=X, Y=Y,
-                session = session,
-                optimizer = optimizer,
-                error_fn = error_fn,
-                layers_dict=layers_dict,
-                batch_size = 50,
-                epochs = epochs,
-                training_labels = training_labels,
-                training_targets = training_targets,
-                test_labels = test_labels,
-                test_targets = test_targets)
+        model_training(X=X, Y=Y,
+                       session = session,
+                       optimizer = optimizer,
+                       error_fn = error_fn,
+                       layers_dict=layers_dict,
+                       batch_size = 50,
+                       epochs = epochs,
+                       training_labels = training_labels,
+                       training_targets = training_targets,
+                       test_labels = test_labels,
+                       test_targets = test_targets)
+        total_epochs += epochs
         next = int(input("On continue ? "))
-
+    
+    stream_handling()
 
 if __name__ == "__main__":
     main()
