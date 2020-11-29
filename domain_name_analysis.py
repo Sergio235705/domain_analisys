@@ -27,7 +27,7 @@ class Analyser():
         if len(url) != 0:
             (self.name, self.extension) = self.split_name(self.url)
         self.authority = authority.lower()
-        self.number_features = 8 # Number of feature we can compute
+        self.number_features = 17 # Number of feature we can compute
 
         # Taken from research paper / web-site ( https://security-soup.net/good-domains-for-bad-guys-the-riskiest-tlds-for-malware-and-phishing/)
         self.suspiciousTLDs = ['.bank', '.online', '.business', '.party', '.cc', '.pw', '.center', '.racing', '.cf',

@@ -62,10 +62,12 @@ class FileTreatment:
 
         group_count = 0
         group_list = []
+        authority_list = []
 
         for cert_name in self.keys:
             handler = CertTreatment(self.content[cert_name])
             domain_name = handler.get_domain_name()
+            authority_list.append(handler.get_authority())
             group_list.append(domain_name)
             group_count += 1
 
@@ -89,6 +91,7 @@ class FileTreatment:
                     for elt in result_dict["matches"]:
                         # filling a new dict with the result to have it indexed by the url, so I can search through
                         group_matches[elt["threat"]["url"]] = (elt["threatType"], elt["platformType"])
+
                 for elt in group_list:
                     row_features = self.get_features_values(elt) # Features
                     suspicious = False # Is suspicious
@@ -117,6 +120,7 @@ class FileTreatment:
         analyser = Analyser(domain_name, "")
         row = []
         row.append(analyser.levenshtein())
+        row.append(analyser.issued_from_free_CA())
         row.append(analyser.deeply_nested_subdomains())
         row.append(analyser.suspicious_tld())
         row.append(analyser.inner_tld_in_subdomain())
@@ -124,6 +128,14 @@ class FileTreatment:
         row.append(analyser.hyphens_in_subdomain())
         row.append(analyser.suspicious_domain_length())
         row.append(analyser.suspicious_characters())
+        row.append(analyser.suspicious_age_domain())
+        row.append(analyser.suspicious_date_creation())
+        row.append(analyser.suspicious_date_expiry())
+        row.append(analyser.suspicious_valid_period_domain())
+        row.append(analyser.suspicious_registrant_name())
+        row.append(analyser.suspicious_registrant_organization())
+        row.append(analyser.suspicious_registrarURL())
+        row.append(analyser.suspicious_parkerURL())
         return row
 
     def see_horrible(self):
