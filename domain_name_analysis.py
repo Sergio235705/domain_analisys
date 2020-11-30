@@ -30,6 +30,7 @@ class Analyser():
                 self.authority = authority.lower()
             else:
                 self.authority = ""
+            self.api = dnstwisterAPI.dnstwisterAPI(self.url)
         self.number_features = 17 # Number of feature we can compute
 
         # Taken from research paper / web-site ( https://security-soup.net/good-domains-for-bad-guys-the-riskiest-tlds-for-malware-and-phishing/)
@@ -212,11 +213,10 @@ class Analyser():
         today = datetime.date.today()
         d1 = today.strftime("%Y-%m-%d")
         #print("d1 =", d1)
-        api = dnstwisterAPI.dnstwisterAPI()
-        date = api.requestDateCreation(self.name+self.extension)
+        date = self.api.requestDateCreation()
         if date == {}:
             return True
-        if api.numMonth(d1,date) > 6 :
+        if self.api.numMonth(d1,date) > 6 :
             return False
         else :
             return True 
@@ -229,11 +229,10 @@ class Analyser():
         today = datetime.date.today()
         d1 = today.strftime("%Y-%m-%d")
         #print("d1 =", d1)
-        api = dnstwisterAPI.dnstwisterAPI()
-        date = api.requestDateCreation(self.name+self.extension)
+        date = self.api.requestDateCreation()
         if date == {}:
             return True
-        if api.numMonth(d1,date) == 0 :
+        if self.api.numMonth(d1,date) == 0 :
             return True
         else :
             return False 
@@ -246,11 +245,10 @@ class Analyser():
         today = datetime.date.today()
         d1 = today.strftime("%Y-%m-%d")
         #print("d1 =", d1)
-        api = dnstwisterAPI.dnstwisterAPI()
-        date = api.requestExpiryDate(self.name+self.extension)
+        date = self.api.requestExpiryDate()
         if date == {}:
             return True
-        if api.numMonth(d1,date) > 12 :
+        if self.api.numMonth(d1,date) > 12 :
             return False
         else :
             return True 
@@ -261,12 +259,12 @@ class Analyser():
         dnstwister API
         """
         
-        api = dnstwisterAPI.dnstwisterAPI()
-        dateEx = api.requestExpiryDate(self.name+self.extension)
-        dateCr = api.requestDateCreation(self.name+self.extension)
+
+        dateEx = self.api.requestExpiryDate()
+        dateCr = self.api.requestDateCreation()
         if dateEx == {} or dateCr == {}:
             return True
-        if api.numMonth(dateEx,dateCr) > 12 :
+        if self.api.numMonth(dateEx,dateCr) > 12 :
             return False
         else :
             return True 
@@ -276,9 +274,8 @@ class Analyser():
         if Api.requestRegistrantName(self.name+self.extension) return {} is suspicious 
         dnstwister API
         """
-        
-        api = dnstwisterAPI.dnstwisterAPI()
-        name = api.requestRegistrantName(self.name+self.extension)
+
+        name = self.api.requestRegistrantName()
         if name == {}:
             return True
         return False
@@ -289,8 +286,8 @@ class Analyser():
         if Api.requestRegistrantOrganization(self.name+self.extension) return {} is suspicious 
         dnstwister API
         """
-        api = dnstwisterAPI.dnstwisterAPI()
-        name = api.requestRegistrantOrganization(self.name+self.extension)
+
+        name = self.api.requestRegistrantOrganization()
         if name == {}:
             return True
         return False
@@ -300,8 +297,8 @@ class Analyser():
         if Api.requestRegistrantURL_Host(self.name+self.extension) return {} is suspicious 
         dnstwister API
         """
-        api = dnstwisterAPI.dnstwisterAPI()
-        name = api.requestRegistrarURL_Host(self.name+self.extension)
+
+        name = self.api.requestRegistrarURL_Host()
         if name == {}:
             return True
         for host in self.suspicious_hosting:
@@ -316,8 +313,7 @@ class Analyser():
        """
        
         if (self.suspicious_age_domain() and   self.suspicious_date_creation() and self.suspicious_date_expiry() and self.suspicious_valid_period_domain()):
-            api = dnstwisterAPI.dnstwisterAPI()
-            value = api.requestParkedCheckUrl(self.name+self.extension)
+            value = self.api.requestParkedCheckUrl()
             if value > 0.50 :
                 return False
             else:
