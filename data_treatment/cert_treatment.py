@@ -6,7 +6,7 @@ class CertTreatment:
         return self.content['data']['leaf_cert']['all_domains'][0]
 
     def get_authority(self):
-        return self.content['data']['chain']['subject']['O']
+        return self.content['data']['chain'][0]['subject']['O']
 
 
 
