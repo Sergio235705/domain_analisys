@@ -15,12 +15,29 @@ import re
 
 class dnstwisterAPI:
 
-    def __init__(self):
+    def __init__(self, name):
         self.headers = {'Content-Type': 'application/json'}
         self.api_adr = "https://dnstwister.report/api/whois/"
         self.api_toex = "https://dnstwister.report/api/to_hex/"
         self.api_parked = "https://dnstwister.report/api/parked/"
         self.pattern_data = '([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))'
+        self.dec = ""
+        self.response_DEC = requests.get(self.api_toex + name)
+
+        if int(str(self.response_DEC)[11:14]) == 200:
+            response_dec = json.loads(self.response_DEC.text)
+            self.dec = response_dec['domain_as_hexadecimal']
+            self.response_WHO = requests.get(url=self.api_adr + self.dec)
+            if int(str(self.response_WHO)[11:14]) == 200:
+                response = json.loads(self.response_WHO.text)
+                self.who = response['whois_text']
+            else:
+                self.who = ""
+        else:
+            self.response_WHO = ""
+            self.who = ""
+
+
 
     def numMonth(self , end, start):
         #print (end)
@@ -31,25 +48,17 @@ class dnstwisterAPI:
         num_months = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month)
         #print(num_months)
         return num_months
-    def validate(self,date_text):
+    def validate(self, date_text):
         try:
             datetime.datetime.strptime(date_text, '%Y-%m-%d')
             return True
         except ValueError:
             return False
-    def requestDateCreation(self, name):
+    def requestDateCreation(self):
         #print(name)
-        response = requests.get(self.api_toex + name)
-        if int(str(response)[11:14])!= 200:
+        if self.who == "" or self.dec == "" :
             return {}
-        response_dec = json.loads(response.text)
-        response_dec = response_dec['domain_as_hexadecimal']
-        #print(response_dec)
-        response = requests.get(url=self.api_adr + response_dec)
-        if int(str(response)[11:14])!= 200:
-            return {}
-        response = json.loads(response.text)
-        response = response['whois_text']
+        response = self.who
         data_creation = ""
         data_creation = response[response.find("Creation Date") + 15:response.find("Creation Date") + 25]
         if data_creation == "":
@@ -58,18 +67,11 @@ class dnstwisterAPI:
             return {}
         return data_creation
 
-    def requestExpiryDate(self, name):
+    def requestExpiryDate(self):
 
-        response = requests.get(self.api_toex + name)
-        if int(str(response)[11:14])!= 200:
+        if self.who == "" or self.dec == "" :
             return {}
-        response_dec = json.loads(response.text)
-        response_dec = response_dec['domain_as_hexadecimal']
-        response = requests.get(url=self.api_adr + response_dec)
-        if int(str(response)[11:14])!= 200:
-            return {}
-        response = json.loads(response.text)
-        response = response['whois_text']
+        response = self.who
         data_expiry = ""
         data_expiry = response[response.find("Registry Expiry Date") + 22:response.find("Registry Expiry Date") + 32]
         if data_expiry == "":
@@ -78,19 +80,12 @@ class dnstwisterAPI:
             return {}
         return data_expiry
 
-    def requestRegistrantName(self, name):
+    def requestRegistrantName(self):
 
-        response = requests.get(self.api_toex + name)
-        if int(str(response)[11:14])!= 200:
+        if self.who == "" or self.dec == "" :
             return {}
-        response_dec = json.loads(response.text)
-        response_dec = response_dec['domain_as_hexadecimal']
-        response = requests.get(url=self.api_adr + response_dec)
-        if int(str(response)[11:14])!= 200:
-            return {}
-        response = json.loads(response.text)
+        response = self.who
         name = ""
-        response = response['whois_text']
         name = response[response.find("Registrant Name:") + 17:response.find("Registrant Name:") + 37]
         name = name.upper()
         if (name == "REDACTED FOR PRIVACY" or name == "WHOISPROTECTION.CC" or name == ""
@@ -99,18 +94,11 @@ class dnstwisterAPI:
         return name
 
 
-    def requestRegistrantOrganization(self, name):
-        response = requests.get(self.api_toex + name)
-        if int(str(response)[11:14])!= 200:
+    def requestRegistrantOrganization(self):
+        if self.who == "" or self.dec == "" :
             return {}
-        response_dec = json.loads(response.text)
-        response_dec = response_dec['domain_as_hexadecimal']
-        response = requests.get(url=self.api_adr + response_dec)
-        if int(str(response)[11:14])!= 200:
-            return {}
-        response = json.loads(response.text)
+        response = self.who
         name = ""
-        response = response['whois_text']
         name = response[response.find("Registrant Organization:") + 25:response.find("Registrant Organization:") + 45]
         name = name.upper()
         if (name == "REDACTED FOR PRIVACY" or name == "WHOISPROTECTION.CC" or name == ""
@@ -120,18 +108,11 @@ class dnstwisterAPI:
 
 
 
-    def requestRegistrarURL_Host(self, name):
-        response = requests.get(self.api_toex + name)
-        if int(str(response)[11:14])!= 200:
+    def requestRegistrarURL_Host(self):
+        if self.who == "" or self.dec == "" :
             return {}
-        response_dec = json.loads(response.text)
-        response_dec = response_dec['domain_as_hexadecimal']
-        response = requests.get(url=self.api_adr + response_dec)
-        if int(str(response)[11:14])!= 200:
-            return {}
-        response = json.loads(response.text)
+        response = self.who
         name = ""
-        response = response['whois_text']
         name = response[response.find("Registrar URL:") + 15:response.find("Registrar URL:") + 50]
         if name == "":
             return {}
@@ -139,13 +120,10 @@ class dnstwisterAPI:
 
 
 
-    def requestParkedCheckUrl(self, name):
-        response = requests.get(self.api_toex + name)
-        if int(str(response)[11:14])!= 200:
+    def requestParkedCheckUrl(self):
+        if self.dec == "" :
             return float(0)
-        response_dec = json.loads(response.text)
-        response_dec = response_dec['domain_as_hexadecimal']
-        response = requests.get(url=self.api_parked + response_dec)
+        response = requests.get(url=self.api_parked + self.dec)
         if int(str(response)[11:14])!= 200:
             return float(0)
         response = json.loads(response.text)
