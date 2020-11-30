@@ -28,7 +28,6 @@ class dnstwisterAPI:
         if self.dec != "" :
             self.response_WHO = requests.get(url=self.api_adr + self.dec)
             if int(str(self.response_WHO)[11:14]) == 200:
-                print("who")
                 response = json.loads(self.response_WHO.text)
                 self.who = response['whois_text']
             else:
