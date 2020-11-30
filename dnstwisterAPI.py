@@ -3,7 +3,7 @@ import json
 import requests
 import datetime
 import re
-
+from binascii import hexlify
 # Age Of Domain <= 6 months -> Phishing
 # Api : requestDataCreation allows to check the data Creation of domains
 # Registry Expiry Date <= 1 year -> Phishing
@@ -22,13 +22,13 @@ class dnstwisterAPI:
         self.api_parked = "https://dnstwister.report/api/parked/"
         self.pattern_data = '([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))'
         self.dec = ""
-        self.response_DEC = requests.get(self.api_toex + name)
-
-        if int(str(self.response_DEC)[11:14]) == 200:
-            response_dec = json.loads(self.response_DEC.text)
-            self.dec = response_dec['domain_as_hexadecimal']
+        #self.response_DEC = requests.get(self.api_toex + name)
+        self.dec = hexlify(bytes(name,'utf-8'))
+        self.dec= str(self.dec.decode("utf8"))
+        if self.dec != "" :
             self.response_WHO = requests.get(url=self.api_adr + self.dec)
             if int(str(self.response_WHO)[11:14]) == 200:
+                print("who")
                 response = json.loads(self.response_WHO.text)
                 self.who = response['whois_text']
             else:
