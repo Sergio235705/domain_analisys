@@ -26,10 +26,10 @@ class Analyser():
         self.url = url
         if len(url) != 0:
             (self.name, self.extension) = self.split_name(self.url)
-		if authority != null:
-			self.authority = authority.lower()
-		else:
-			self.authority = ""
+            if authority is not None:
+                self.authority = authority.lower()
+            else:
+                self.authority = ""
         self.number_features = 17 # Number of feature we can compute
 
         # Taken from research paper / web-site ( https://security-soup.net/good-domains-for-bad-guys-the-riskiest-tlds-for-malware-and-phishing/)
@@ -107,19 +107,19 @@ class Analyser():
         for word in self.suspicious_keywords_list:
             ld.append(self.levenshtein_distance(word))
         return min(ld)
-    
-    def issued_from_free_CA(self):
         """
         Indicates if the certificate authority is a free certificate authority
 
         return: bool : true if certificate authority is free, false if not free
         """
+    
+    def issued_from_free_CA(self):
         res = False
-		if authority == "":
-			return res
-        for ca in self.free_certificates_authorities:
-            if ca in self.authority:
-                res = True
+        if self.authority == "":
+            return res
+            for ca in self.free_certificates_authorities:
+                if ca in self.authority:
+                    return res
         return res
 
     def deeply_nested_subdomains(self):
@@ -316,12 +316,12 @@ class Analyser():
        """
        
         if (self.suspicious_age_domain() and   self.suspicious_date_creation() and self.suspicious_date_expiry() and self.suspicious_valid_period_domain()):
-          api = dnstwisterAPI.dnstwisterAPI()
-          value = api.requestRegistrarURL_Host(self.name+self.extension)
-          if value > 0.50 : 
-              return False
-          else: 
-              return True
+            api = dnstwisterAPI.dnstwisterAPI()
+            value = api.requestParkedCheckUrl(self.name+self.extension)
+            if value > 0.50 :
+                return False
+            else:
+                return True
         else:
           return False 
 
