@@ -62,12 +62,11 @@ class FileTreatment:
 
         group_count = 0
         group_list = []
-        authority_list = []
 
         for cert_name in self.keys:
             handler = CertTreatment(self.content[cert_name])
             domain_name = handler.get_domain_name()
-            authority_list.append(handler.get_authority())
+            authority_name = handler.get_authority()
             group_list.append(domain_name)
             group_count += 1
 
@@ -93,7 +92,7 @@ class FileTreatment:
                         group_matches[elt["threat"]["url"]] = (elt["threatType"], elt["platformType"])
 
                 for elt in group_list:
-                    row_features = self.get_features_values(elt) # Features
+                    row_features = self.get_features_values(elt, authority_name) # Features
                     suspicious = False # Is suspicious
                     threatType = ''
                     platformType = ''
@@ -112,12 +111,12 @@ class FileTreatment:
             count +=1
         self.write_in_csv(csv_file_path, fields, rows)
     
-    def get_features_values(self, domain_name):
+    def get_features_values(self, domain_name, authority):
         """
             Compute value of the features for the domain name and return it in a row
         """
         # Create analyser for the domain name
-        analyser = Analyser(domain_name, "")
+        analyser = Analyser(domain_name, authority)
         row = []
         row.append(analyser.levenshtein())
         row.append(analyser.issued_from_free_CA())
