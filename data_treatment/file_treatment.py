@@ -134,7 +134,7 @@ class FileTreatment:
         row.append(analyser.suspicious_registrant_name())
         row.append(analyser.suspicious_registrant_organization())
         row.append(analyser.suspicious_registrarURL())
-        row.append(analyser.suspicious_parkerURL())
+        #row.append(analyser.suspicious_parkerURL())
         return row
 
     def see_horrible(self):
