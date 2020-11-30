@@ -26,7 +26,10 @@ class Analyser():
         self.url = url
         if len(url) != 0:
             (self.name, self.extension) = self.split_name(self.url)
-        self.authority = authority.lower()
+		if authority != null:
+			self.authority = authority.lower()
+		else:
+			self.authority = ""
         self.number_features = 17 # Number of feature we can compute
 
         # Taken from research paper / web-site ( https://security-soup.net/good-domains-for-bad-guys-the-riskiest-tlds-for-malware-and-phishing/)
@@ -112,6 +115,8 @@ class Analyser():
         return: bool : true if certificate authority is free, false if not free
         """
         res = False
+		if authority == "":
+			return res
         for ca in self.free_certificates_authorities:
             if ca in self.authority:
                 res = True
