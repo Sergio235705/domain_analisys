@@ -1,4 +1,7 @@
-Network project on the subject "CT logs and phishing"
+The aim is to create software that through the use of machine learning algorithms (applied to a neural network) can predict and label the nature of a website with a certain reliability. (Phishing or not)
+
+Network project "CT logs and phishing"
+
 
 How to use it:
 
